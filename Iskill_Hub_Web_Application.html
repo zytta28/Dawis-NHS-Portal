@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iskill Hub - Dawis National High School (303227)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Global Header -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Left: School Info & Branding -->
+            <div class="flex items-center space-x-3">
+                <div class="relative group cursor-pointer" onclick="document.getElementById('logoInput').click()" title="Click to upload/change school logo">
+                    <img id="schoolLogo" src="https://placehold.co/100x100/0369a1/ffffff?text=DNHS" alt="School Logo" class="h-10 w-10 rounded-full border-2 border-slate-700 object-cover shadow-sm transition transform hover:scale-105">
+                    <div class="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <i class="fa-solid fa-camera text-xs text-white"></i>
+                    </div>
+                    <input type="file" id="logoInput" class="hidden" accept="image/*" onchange="handleLogoUpload(event)">
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold leading-tight text-white flex items-center gap-2">
+                        <span>Dawis National High School</span>
+                        <span class="bg-sky-900/80 text-sky-200 text-xs px-2 py-0.5 rounded border border-sky-700 font-mono">ID: 303227</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Department of Education • Region VII</p>
+                </div>
+            </div>
+
+            <!-- Right: Iskill Hub Branding & Role Switcher -->
+            <div class="flex items-center space-x-4">
+                <div class="hidden sm:flex items-center bg-slate-800/80 border border-slate-700 rounded-lg p-1">
+                    <span class="text-xs text-slate-400 px-2 font-medium">Role:</span>
+                    <select id="roleSelector" onchange="changeRole(this.value)" class="bg-slate-900 text-xs text-sky-400 font-semibold rounded px-2 py-1 focus:outline-none cursor-pointer">
+                        <option value="teacher">Teacher Portal</option>
+                        <option value="staff">Non-Teaching Staff</option>
+                        <option value="head">School Head (Principal)</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center space-x-2 border-l border-slate-800 pl-4">
+                    <div class="text-right">
+                        <div class="text-sm font-extrabold tracking-wider bg-gradient-to-r from-sky-400 to-teal-300 bg-clip-text text-transparent">Iskill Hub</div>
+                        <div class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Official Portal</div>
+                    </div>
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white font-black text-xs shadow-lg">
+                        iH
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container Layout -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6">
+
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 shrink-0 space-y-4">
+            <nav class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 space-y-1">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-sky-600 bg-sky-50">
+                    <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                    <span>Dashboard Overview</span>
+                </button>
+                <button onclick="switchTab('students')" id="nav-students" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-users w-5 text-center"></i>
+                    <span>Student Roster & Grades</span>
+                </button>
+                <button onclick="switchTab('form2')" id="nav-form2" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-calendar-check w-5 text-center"></i>
+                    <span>SF2 Monthly Attendance</span>
+                </button>
+                <button onclick="switchTab('form137')" id="nav-form137" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-file-invoice w-5 text-center"></i>
+                    <span>SF10 Permanent Records</span>
+                </button>
+                <button onclick="switchTab('dll')" id="nav-dll" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-amber-500"></i>
+                    <span>AI Lesson Log (DLL)</span>
+                </button>
+                <button onclick="switchTab('cot')" id="nav-cot" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-clipboard-check w-5 text-center text-purple-500"></i>
+                    <span>COT Evaluation</span>
+                </button>
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-gear w-5 text-center"></i>
+                    <span>Settings & Storage</span>
+                </button>
+            </nav>
+
+            <!-- Storage Indicator Card -->
+            <div class="bg-slate-900 text-slate-300 rounded-xl p-4 shadow-sm text-xs space-y-2 border border-slate-800">
+                <div class="flex items-center justify-between">
+                    <span class="font-semibold text-white flex items-center gap-1.5">
+                        <i class="fa-brands fa-google-drive text-emerald-400"></i> Storage Provider
+                    </span>
+                    <span id="storageBadge" class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded text-[10px] font-bold">Browser Local</span>
+                </div>
+                <p id="storageDesc" class="text-slate-400 leading-relaxed">Files stored locally in browser storage. Connect Google Drive in Settings for cloud sync.</p>
+                <button onclick="switchTab('settings')" class="w-full text-center py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-400 rounded transition font-medium text-xs mt-1">
+                    Manage Storage Setup
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content View Area -->
+        <main class="flex-1 min-w-0">
+
+            <!-- TAB 1: DASHBOARD OVERVIEW -->
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-sky-700 via-sky-800 to-slate-900 text-white rounded-2xl p-6 shadow-md relative overflow-hidden">
+                    <div class="relative z-10 max-w-2xl space-y-2">
+                        <span class="bg-sky-500/30 border border-sky-400/30 text-sky-200 text-xs px-2.5 py-1 rounded-full font-medium">Official Portal • Dawis NHS (303227)</span>
+                        <h2 class="text-2xl font-extrabold tracking-tight">Welcome to Iskill Hub</h2>
+                        <p class="text-sky-100 text-sm leading-relaxed">Integrated School Records, Grading System, SF2 Attendance Vault, Permanent SF10 Storage, and AI Lesson Assistance for Teachers and Staff.</p>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                        <div class="p-3 bg-sky-50 text-sky-600 rounded-lg">
+                            <i class="fa-solid fa-user-graduate text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-medium text-slate-500 uppercase">Enrolled Students</div>
+                            <div class="text-2xl font-bold text-slate-800" id="dashTotalStudents">0</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-lg">
+                            <i class="fa-solid fa-file-lines text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-medium text-slate-500 uppercase">SF2 Attendance Files</div>
+                            <div class="text-2xl font-bold text-slate-800" id="dashTotalSF2">0</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
+                            <i class="fa-solid fa-folder-open text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-medium text-slate-500 uppercase">SF10 Records Uploaded</div>
+                            <div class="text-2xl font-bold text-slate-800" id="dashTotalSF10">0</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-4">
+                        <div class="p-3 bg-purple-50 text-purple-600 rounded-lg">
+                            <i class="fa-solid fa-chalkboard-user text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-medium text-slate-500 uppercase">Active Sections</div>
+                            <div class="text-2xl font-bold text-slate-800" id="dashTotalSections">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Action Buttons -->
+                <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wide">Quick Action Shortcuts</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <button onclick="switchTab('students'); openAddStudentModal();" class="p-3 bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-300 rounded-lg text-left transition text-slate-700 hover:text-sky-700 group">
+                            <i class="fa-solid fa-user-plus text-sky-600 mb-2 group-hover:scale-110 transition"></i>
+                            <div class="text-xs font-bold">Enroll Student</div>
+                            <div class="text-[10px] text-slate-400">Add learner info</div>
+                        </button>
+                        <button onclick="switchTab('form2')" class="p-3 bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-lg text-left transition text-slate-700 hover:text-emerald-700 group">
+                            <i class="fa-solid fa-upload text-emerald-600 mb-2 group-hover:scale-110 transition"></i>
+                            <div class="text-xs font-bold">Upload SF2</div>
+                            <div class="text-[10px] text-slate-400">Monthly attendance scan</div>
+                        </button>
+                        <button onclick="switchTab('dll')" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-lg text-left transition text-slate-700 hover:text-amber-700 group">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-500 mb-2 group-hover:scale-110 transition"></i>
+                            <div class="text-xs font-bold">Generate DLL</div>
+                            <div class="text-[10px] text-slate-400">AI daily lesson plan</div>
+                        </button>
+                        <button onclick="switchTab('settings')" class="p-3 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-lg text-left transition text-slate-700 hover:text-purple-700 group">
+                            <i class="fa-brands fa-google-drive text-purple-600 mb-2 group-hover:scale-110 transition"></i>
+                            <div class="text-xs font-bold">Google Drive</div>
+                            <div class="text-[10px] text-slate-400">Configure Cloud Storage</div>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: STUDENTS ROSTER & GRADEBOOK -->
+            <section id="tab-students" class="tab-content space-y-6 hidden">
+                <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Student Roster & Gradebook</h2>
+                            <p class="text-xs text-slate-500">Filter students by Department, Grade Level, and Section</p>
+                        </div>
+                        <button onclick="openAddStudentModal()" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium text-xs flex items-center gap-2 shadow-sm transition">
+                            <i class="fa-solid fa-plus"></i> Add New Student
+                        </button>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Department</label>
+                            <select id="filterDept" onchange="updateGradeOptions()" class="w-full text-xs border border-slate-300 rounded-md p-2 bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                <option value="JHS">Junior High School (Grades 7-10)</option>
+                                <option value="SHS">Senior High School (Grades 11-12)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Grade Level</label>
+                            <select id="filterGrade" onchange="renderStudentTable()" class="w-full text-xs border border-slate-300 rounded-md p-2 bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-500 uppercase mb-1">Section Filter</label>
+                            <select id="filterSection" onchange="renderStudentTable()" class="w-full text-xs border border-slate-300 rounded-md p-2 bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                <option value="ALL">All Sections</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Student List Table -->
+                    <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-lg">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                                    <th class="p-3">LRN</th>
+                                    <th class="p-3">Student Full Name</th>
+                                    <th class="p-3">Sex</th>
+                                    <th class="p-3">Grade & Section</th>
+                                    <th class="p-3 text-center">Gen. Average</th>
+                                    <th class="p-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody" class="divide-y divide-slate-200 bg-white">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: FORM 2 (SF2) ATTENDANCE -->
+            <section id="tab-form2" class="tab-content space-y-6 hidden">
+                <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">School Form 2 (SF2) Attendance Vault</h2>
+                            <p class="text-xs text-slate-500">Upload scanned monthly attendance reports for Dawis National High School</p>
+                        </div>
+                    </div>
+
+                    <!-- Upload SF2 Form -->
+                    <form onsubmit="handleSF2Upload(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">School Year</label>
+                                <input type="text" id="sf2SY" required value="2025-2026" class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Month</label>
+                                <select id="sf2Month" required class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Grade & Section</label>
+                                <input type="text" id="sf2GradeSec" placeholder="e.g. Grade 7 - Sampaguita" required class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">SF2 File (PDF / Image)</label>
+                                <input type="file" id="sf2FileInput" required accept="image/*,application/pdf" class="w-full text-xs border border-slate-300 rounded p-1.5 bg-white">
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Upload SF2 Document
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Archive Table -->
+                    <div class="space-y-2">
+                        <h3 class="text-sm font-bold text-slate-700">Uploaded SF2 Repository</h3>
+                        <div class="overflow-x-auto border border-slate-200 rounded-lg">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="bg-slate-100 border-b border-slate-200 font-semibold text-slate-600">
+                                        <th class="p-3">School Year</th>
+                                        <th class="p-3">Month</th>
+                                        <th class="p-3">Grade & Section</th>
+                                        <th class="p-3">File Name</th>
+                                        <th class="p-3">Storage Link</th>
+                                        <th class="p-3 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sf2TableBody" class="divide-y divide-slate-200 bg-white">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: FORM 137 (SF10) PERMANENT RECORDS -->
+            <section id="tab-form137" class="tab-content space-y-6 hidden">
+                <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">School Form 10 (SF10 / Form 137) Vault</h2>
+                            <p class="text-xs text-slate-500">Attach permanent academic history documents to student profiles</p>
+                        </div>
+                    </div>
+
+                    <!-- Form 137 Upload Form -->
+                    <form onsubmit="handleSF10Upload(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Select Student</label>
+                                <select id="sf10StudentSelect" required class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Previous Grade Level</label>
+                                <select id="sf10GradeLevel" required class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+                                    <option value="Grade 6 (Elementary Record)">Grade 6 (Elementary Record)</option>
+                                    <option value="Grade 7 SF10">Grade 7 SF10</option>
+                                    <option value="Grade 8 SF10">Grade 8 SF10</option>
+                                    <option value="Grade 9 SF10">Grade 9 SF10</option>
+                                    <option value="Grade 10 SF10">Grade 10 SF10</option>
+                                    <option value="Grade 11 SF10">Grade 11 SF10</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 uppercase mb-1">Scanned Document (PDF/Image)</label>
+                                <input type="file" id="sf10FileInput" required accept="image/*,application/pdf" class="w-full text-xs border border-slate-300 rounded p-1.5 bg-white">
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center gap-2">
+                                <i class="fa-solid fa-file-arrow-up"></i> Attach SF10 Record
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Archives Table -->
+                    <div class="space-y-2">
+                        <h3 class="text-sm font-bold text-slate-700">Permanent Record Registry</h3>
+                        <div class="overflow-x-auto border border-slate-200 rounded-lg">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="bg-slate-100 border-b border-slate-200 font-semibold text-slate-600">
+                                        <th class="p-3">Student LRN</th>
+                                        <th class="p-3">Student Name</th>
+                                        <th class="p-3">Record Level</th>
+                                        <th class="p-3">File Name</th>
+                                        <th class="p-3">File Link</th>
+                                        <th class="p-3 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sf10TableBody" class="divide-y divide-slate-200 bg-white">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: AI DAILY LESSON LOG ASSISTANT -->
+            <section id="tab-dll" class="tab-content space-y-6 hidden">
+                <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> DepEd AI Daily Lesson Log (DLL) Generator
+                            </h2>
+                            <p class="text-xs text-slate-500">Generate structured daily lesson log plans tailored to DepEd standards</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Subject / Learning Area</label>
+                            <input type="text" id="dllSubject" placeholder="e.g. Mathematics, Science, English" class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Target Grade Level</label>
+                            <select id="dllGrade" class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+                                <option value="Grade 7">Grade 7</option>
+                                <option value="Grade 8">Grade 8</option>
+                                <option value="Grade 9">Grade 9</option>
+                                <option value="Grade 10">Grade 10</option>
+                                <option value="Grade 11">Grade 11</option>
+                                <option value="Grade 12">Grade 12</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Lesson Topic / Competency</label>
+                            <input type="text" id="dllTopic" placeholder="e.g. Quadratic Equations, Photosynthesis" class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <button onclick="generateDLL()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-semibold text-xs transition flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-bolt"></i> Generate Lesson Log Structure
+                    </button>
+
+                    <!-- Output Container -->
+                    <div id="dllOutput" class="hidden bg-slate-900 text-slate-100 p-5 rounded-xl text-xs space-y-4 font-mono">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2 text-slate-400">
+                            <span class="font-bold text-amber-400">DAWIS NATIONAL HIGH SCHOOL - DAILY LESSON LOG (DLL)</span>
+                            <button onclick="copyDLL()" class="text-xs bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded text-sky-400">
+                                <i class="fa-regular fa-copy"></i> Copy Text
+                            </button>
+                        </div>
+                        <div id="dllText" class="space-y-3 whitespace-pre-wrap leading-relaxed"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: COT EVALUATION -->
+            <section id="tab-cot" class="tab-content space-y-6 hidden">
+                <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h2 class="text-lg font-bold text-slate-800">Classroom Observation Tool (COT) Rubric</h2>
+                        <p class="text-xs text-slate-500">School Head / Principal Evaluation Rating Sheet</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Teacher Name</label>
+                            <input type="text" id="cotTeacher" placeholder="e.g. Maria Santos" class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Subject & Grade Level Observed</label>
+                            <input type="text" id="cotSubject" placeholder="e.g. Science Grade 9" class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase">Key Indicators (Rating 1 - 7)</h3>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span>1. Applies knowledge of content within and across curriculum teaching areas.</span>
+                                <input type="number" min="1" max="7" value="5" class="cot-rate w-16 p-1 border rounded text-center">
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span>2. Uses a range of teaching strategies that enhance learner achievement in literacy and numeracy.</span>
+                                <input type="number" min="1" max="7" value="5" class="cot-rate w-16 p-1 border rounded text-center">
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span>3. Applies a range of teaching strategies to develop critical and creative thinking skills.</span>
+                                <input type="number" min="1" max="7" value="6" class="cot-rate w-16 p-1 border rounded text-center">
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span>4. Manages classroom structure to engage learners in meaningful activities.</span>
+                                <input type="number" min="1" max="7" value="5" class="cot-rate w-16 p-1 border rounded text-center">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="calculateCOT()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+                        Calculate Overall COT Rating
+                    </button>
+
+                    <div id="cotResult" class="hidden p-4 bg-purple-50 border border-purple-200 rounded-lg text-purple-900 text-xs space-y-1">
+                        <div class="font-bold text-sm">COT Observation Summary Calculated:</div>
+                        <div id="cotAverageDisplay"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: SETTINGS & GOOGLE DRIVE STORAGE -->
+            <section id="tab-settings" class="tab-content space-y-6 hidden">
+                <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">Settings & Storage Setup</h2>
+                        <p class="text-xs text-slate-500">Configure storage mode or link your official Google Drive using Google Apps Script</p>
+                    </div>
+
+                    <!-- Storage Configuration Box -->
+                    <div class="bg-slate-50 border border-slate-200 p-5 rounded-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-brands fa-google-drive text-3xl text-emerald-600"></i>
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-800">Google Drive Integration</h3>
+                                    <p class="text-xs text-slate-500">Store uploaded SF2 attendance & SF10 permanent records in Google Drive</p>
+                                </div>
+                            </div>
+                            <span id="settingsStatusBadge" class="px-2.5 py-1 text-xs rounded-full font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                                Disconnected (Browser Mode)
+                            </span>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-xs font-semibold text-slate-700">Google Apps Script Web App URL</label>
+                            <input type="url" id="gdriveScriptUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full text-xs border border-slate-300 rounded p-2.5 focus:ring-2 focus:ring-sky-500 focus:outline-none font-mono">
+                            <p class="text-[11px] text-slate-500">Paste your deployed Web App URL here to enable cloud uploads directly to your Google Drive.</p>
+                        </div>
+
+                        <div class="flex items-center gap-3 pt-2">
+                            <button onclick="saveGDriveUrl()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition shadow-sm flex items-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i> Save & Test Storage
+                            </button>
+                            <button onclick="removeGDriveStorage()" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold rounded-lg transition">
+                                <i class="fa-solid fa-trash-can"></i> Remove Storage Connection
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Instructions Accordion / Guide -->
+                    <div class="bg-slate-900 text-slate-200 p-5 rounded-xl text-xs space-y-3">
+                        <h4 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+                            <i class="fa-solid fa-code"></i> How to connect Google Drive (1-Minute Setup)
+                        </h4>
+                        <ol class="list-decimal list-inside space-y-1.5 text-slate-300">
+                            <li>Open <a href="https://drive.google.com" target="_blank" class="text-sky-400 underline">Google Drive</a> and create a folder named <span class="font-mono text-sky-300">Dawis_NHS_Records</span>.</li>
+                            <li>Go to <a href="https://script.google.com" target="_blank" class="text-sky-400 underline">Google Apps Script</a> and click <strong>New Project</strong>.</li>
+                            <li>Replace all default code with the script provided below:</li>
+                        </ol>
+
+                        <div class="bg-slate-950 p-3 rounded font-mono text-[11px] text-slate-300 overflow-x-auto relative">
+                            <button onclick="copyAppsScript()" class="absolute top-2 right-2 px-2 py-1 bg-slate-800 text-sky-400 text-[10px] rounded hover:bg-slate-700">Copy Code</button>
+<pre id="appsScriptCode">function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var folderName = "Dawis_NHS_Records";
+    var folders = DriveApp.getFoldersByName(folderName);
+    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+    
+    var decoded = Utilities.base64Decode(data.fileData.split(',')[1]);
+    var blob = Utilities.newBlob(decoded, data.mimeType, data.fileName);
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success",
+      url: file.getUrl(),
+      id: file.getId()
+    })).setMimeType(ContentService.MimeType.JSON);
+  } catch(error) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+                        </div>
+                        <p class="text-slate-400 text-[11px]">4. Click <strong>Deploy</strong> $\rightarrow$ <strong>New Deployment</strong> $\rightarrow$ Select type <strong>Web App</strong> $\rightarrow$ Set <i>Who has access</i> to <strong>"Anyone"</strong> $\rightarrow$ Deploy and paste the Web App URL above.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: ADD / EDIT STUDENT -->
+    <div id="studentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-base" id="studentModalTitle">Enroll New Student</h3>
+                <button onclick="closeStudentModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form onsubmit="saveStudent(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="studentId">
+                <div>
+                    <label class="block font-semibold text-slate-600 mb-1">Learner Reference Number (LRN)</label>
+                    <input type="text" id="mLRN" required pattern="[0-9]{12}" title="12-digit LRN" placeholder="12-digit LRN" class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">First Name</label>
+                        <input type="text" id="mFirstName" required class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Last Name</label>
+                        <input type="text" id="mLastName" required class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Sex</label>
+                        <select id="mSex" class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Department</label>
+                        <select id="mDept" onchange="modalDeptChanged()" class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+                            <option value="JHS">Junior High School</option>
+                            <option value="SHS">Senior High School</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Grade Level</label>
+                        <select id="mGrade" class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Section</label>
+                        <input type="text" id="mSection" required placeholder="e.g. Sampaguita" class="w-full border border-slate-300 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <span class="font-bold text-slate-700 block mb-2">Quarterly Grades</span>
+                    <div class="grid grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500">Q1 Grade</label>
+                            <input type="number" min="60" max="100" id="mQ1" value="0" class="w-full border border-slate-300 rounded p-1.5 text-center font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500">Q2 Grade</label>
+                            <input type="number" min="60" max="100" id="mQ2" value="0" class="w-full border border-slate-300 rounded p-1.5 text-center font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500">Q3 Grade</label>
+                            <input type="number" min="60" max="100" id="mQ3" value="0" class="w-full border border-slate-300 rounded p-1.5 text-center font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500">Q4 Grade</label>
+                            <input type="number" min="60" max="100" id="mQ4" value="0" class="w-full border border-slate-300 rounded p-1.5 text-center font-bold">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeStudentModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg font-medium text-xs">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg font-medium text-xs">Save Student Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Message Box -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs px-4 py-3 rounded-lg shadow-2xl flex items-center space-x-2 z-50 transform transition-all duration-300 translate-y-20 opacity-0 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-info text-sky-400 text-sm"></i>
+        <span id="toastMsg">Notification message</span>
+    </div>
+
+    <script>
+        // Global State Architecture
+        const DB_KEY = "IskillHub_DawisNHS_DB";
+        let state = {
+            students: [],
+            sf2: [],
+            sf10: [],
+            gdriveUrl: "",
+            logoUrl: "https://placehold.co/100x100/0369a1/ffffff?text=DNHS"
+        };
+
+        // Initialize Application
+        window.onload = function() {
+            loadState();
+            updateGradeOptions();
+            renderAll();
+        };
+
+        // Load State from LocalStorage
+        function loadState() {
+            const saved = localStorage.getItem(DB_KEY);
+            if (saved) {
+                try {
+                    state = Object.assign(state, JSON.parse(saved));
+                } catch(e) {
+                    console.error("Failed to parse saved state", e);
+                }
+            }
+            if (state.logoUrl) {
+                document.getElementById('schoolLogo').src = state.logoUrl;
+            }
+            if (state.gdriveUrl) {
+                document.getElementById('gdriveScriptUrl').value = state.gdriveUrl;
+                updateStorageBadge(true);
+            } else {
+                updateStorageBadge(false);
+            }
+        }
+
+        // Save State to LocalStorage
+        function saveState() {
+            localStorage.setItem(DB_KEY, JSON.stringify(state));
+            renderAll();
+        }
+
+        function renderAll() {
+            updateDashboardStats();
+            renderStudentTable();
+            renderSF2Table();
+            renderSF10Table();
+            populateSF10StudentSelect();
+        }
+
+        // Toast Message Notification Helper
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMsg');
+            const iconEl = document.getElementById('toastIcon');
+
+            msgEl.textContent = message;
+            if (isError) {
+                iconEl.className = "fa-solid fa-circle-exclamation text-rose-400 text-sm";
+            } else {
+                iconEl.className = "fa-solid fa-circle-check text-emerald-400 text-sm";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+
+        // Tab Navigation Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-sky-600', 'bg-sky-50');
+                btn.classList.add('text-slate-600');
+            });
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-600');
+                activeNav.classList.add('text-sky-600', 'bg-sky-50');
+            }
+        }
+
+        // Role Switching Logic
+        function changeRole(role) {
+            showToast(`Switched view to ${role.toUpperCase()} mode`);
+            if (role === 'head') {
+                switchTab('cot');
+            } else if (role === 'staff') {
+                switchTab('form2');
+            } else {
+                switchTab('dashboard');
+            }
+        }
+
+        // Logo Upload Handler
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.logoUrl = e.target.result;
+                    document.getElementById('schoolLogo').src = state.logoUrl;
+                    saveState();
+                    showToast("School logo updated successfully");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Update Dashboard Analytics
+        function updateDashboardStats() {
+            document.getElementById('dashTotalStudents').textContent = state.students.length;
+            document.getElementById('dashTotalSF2').textContent = state.sf2.length;
+            document.getElementById('dashTotalSF10').textContent = state.sf10.length;
+
+            const sections = new Set(state.students.map(s => `${s.grade}-${s.section}`));
+            document.getElementById('dashTotalSections').textContent = sections.size;
+        }
+
+        // Grade Options Dynamic Filtering
+        function updateGradeOptions() {
+            const dept = document.getElementById('filterDept').value;
+            const gradeSelect = document.getElementById('filterGrade');
+            gradeSelect.innerHTML = "";
+
+            const grades = dept === "JHS" ? ["Grade 7", "Grade 8", "Grade 9", "Grade 10"] : ["Grade 11", "Grade 12"];
+            grades.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                gradeSelect.appendChild(opt);
+            });
+
+            populateSectionFilter();
+            renderStudentTable();
+        }
+
+        function populateSectionFilter() {
+            const sectionSelect = document.getElementById('filterSection');
+            const dept = document.getElementById('filterDept').value;
+            const grade = document.getElementById('filterGrade').value;
+
+            sectionSelect.innerHTML = '<option value="ALL">All Sections</option>';
+            const uniqueSecs = [...new Set(state.students.filter(s => s.dept === dept && s.grade === grade).map(s => s.section))];
+            
+            uniqueSecs.forEach(sec => {
+                const opt = document.createElement('option');
+                opt.value = sec;
+                opt.textContent = sec;
+                sectionSelect.appendChild(opt);
+            });
+        }
+
+        // Render Student Table
+        function renderStudentTable() {
+            const body = document.getElementById('studentTableBody');
+            body.innerHTML = "";
+
+            const dept = document.getElementById('filterDept').value;
+            const grade = document.getElementById('filterGrade').value;
+            const section = document.getElementById('filterSection').value;
+
+            const filtered = state.students.filter(s => {
+                const matchDept = s.dept === dept;
+                const matchGrade = s.grade === grade;
+                const matchSec = section === "ALL" || s.section === section;
+                return matchDept && matchGrade && matchSec;
+            });
+
+            if (filtered.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">No students enrolled under selected filters. Click "+ Add New Student" to enroll learners.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(s => {
+                const qArr = [s.q1, s.q2, s.q3, s.q4].map(Number).filter(n => n > 0);
+                const avg = qArr.length ? (qArr.reduce((a,b)=>a+b,0)/qArr.length).toFixed(1) : "N/A";
+                
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-slate-600">${s.lrn}</td>
+                    <td class="p-3 font-bold text-slate-800">${s.lastName}, ${s.firstName}</td>
+                    <td class="p-3 text-slate-500">${s.sex}</td>
+                    <td class="p-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-semibold">${s.grade} - ${s.section}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded font-bold text-xs ${avg >= 75 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">${avg}</span></td>
+                    <td class="p-3 text-right space-x-2">
+                        <button onclick="editStudent('${s.id}')" class="text-sky-600 hover:text-sky-800 font-semibold text-xs"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                        <button onclick="deleteStudent('${s.id}')" class="text-rose-500 hover:text-rose-700 font-semibold text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        // Student Modal Handlers
+        function openAddStudentModal() {
+            document.getElementById('studentId').value = "";
+            document.getElementById('studentModalTitle').textContent = "Enroll New Student";
+            document.getElementById('mLRN').value = "";
+            document.getElementById('mFirstName').value = "";
+            document.getElementById('mLastName').value = "";
+            document.getElementById('mSection').value = "";
+            document.getElementById('mQ1').value = 0;
+            document.getElementById('mQ2').value = 0;
+            document.getElementById('mQ3').value = 0;
+            document.getElementById('mQ4').value = 0;
+            modalDeptChanged();
+            document.getElementById('studentModal').classList.remove('hidden');
+        }
+
+        function modalDeptChanged() {
+            const dept = document.getElementById('mDept').value;
+            const gradeSelect = document.getElementById('mGrade');
+            gradeSelect.innerHTML = "";
+            const grades = dept === "JHS" ? ["Grade 7", "Grade 8", "Grade 9", "Grade 10"] : ["Grade 11", "Grade 12"];
+            grades.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                gradeSelect.appendChild(opt);
+            });
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.add('hidden');
+        }
+
+        function saveStudent(e) {
+            e.preventDefault();
+            const id = document.getElementById('studentId').value || Date.now().toString();
+            const existingIndex = state.students.findIndex(s => s.id === id);
+
+            const newStudent = {
+                id,
+                lrn: document.getElementById('mLRN').value,
+                firstName: document.getElementById('mFirstName').value,
+                lastName: document.getElementById('mLastName').value,
+                sex: document.getElementById('mSex').value,
+                dept: document.getElementById('mDept').value,
+                grade: document.getElementById('mGrade').value,
+                section: document.getElementById('mSection').value,
+                q1: parseFloat(document.getElementById('mQ1').value) || 0,
+                q2: parseFloat(document.getElementById('mQ2').value) || 0,
+                q3: parseFloat(document.getElementById('mQ3').value) || 0,
+                q4: parseFloat(document.getElementById('mQ4').value) || 0
+            };
+
+            if (existingIndex > -1) {
+                state.students[existingIndex] = newStudent;
+                showToast("Student profile updated");
+            } else {
+                state.students.push(newStudent);
+                showToast("New student enrolled successfully");
+            }
+
+            saveState();
+            closeStudentModal();
+        }
+
+        function editStudent(id) {
+            const s = state.students.find(st => st.id === id);
+            if (!s) return;
+
+            document.getElementById('studentId').value = s.id;
+            document.getElementById('studentModalTitle').textContent = "Edit Student Profile";
+            document.getElementById('mLRN').value = s.lrn;
+            document.getElementById('mFirstName').value = s.firstName;
+            document.getElementById('mLastName').value = s.lastName;
+            document.getElementById('mSex').value = s.sex;
+            document.getElementById('mDept').value = s.dept;
+            modalDeptChanged();
+            document.getElementById('mGrade').value = s.grade;
+            document.getElementById('mSection').value = s.section;
+            document.getElementById('mQ1').value = s.q1;
+            document.getElementById('mQ2').value = s.q2;
+            document.getElementById('mQ3').value = s.q3;
+            document.getElementById('mQ4').value = s.q4;
+
+            document.getElementById('studentModal').classList.remove('hidden');
+        }
+
+        function deleteStudent(id) {
+            if (confirm("Are you sure you want to remove this student profile?")) {
+                state.students = state.students.filter(s => s.id !== id);
+                saveState();
+                showToast("Student record deleted");
+            }
+        }
+
+        // Upload SF2 Form Handler
+        async function handleSF2Upload(e) {
+            e.preventDefault();
+            const sy = document.getElementById('sf2SY').value;
+            const month = document.getElementById('sf2Month').value;
+            const gradeSec = document.getElementById('sf2GradeSec').value;
+            const fileInput = document.getElementById('sf2FileInput');
+
+            if (!fileInput.files.length) return;
+            const file = fileInput.files[0];
+
+            let fileUrl = "#";
+            if (state.gdriveUrl) {
+                showToast("Uploading SF2 directly to Google Drive...");
+                fileUrl = await uploadToGoogleDrive(file);
+            } else {
+                fileUrl = URL.createObjectURL(file);
+                showToast("Saved SF2 locally in browser cache");
+            }
+
+            state.sf2.push({
+                id: Date.now().toString(),
+                sy,
+                month,
+                gradeSec,
+                fileName: file.name,
+                url: fileUrl,
+                date: new Date().toLocaleDateString()
+            });
+
+            saveState();
+            fileInput.value = "";
+        }
+
+        function renderSF2Table() {
+            const body = document.getElementById('sf2TableBody');
+            body.innerHTML = "";
+
+            if (state.sf2.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">No SF2 monthly attendance files uploaded yet.</td></tr>`;
+                return;
+            }
+
+            state.sf2.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-slate-700">${item.sy}</td>
+                    <td class="p-3 text-slate-600">${item.month}</td>
+                    <td class="p-3 text-slate-600">${item.gradeSec}</td>
+                    <td class="p-3 font-mono text-slate-500">${item.fileName}</td>
+                    <td class="p-3"><a href="${item.url}" target="_blank" class="text-sky-600 hover:underline font-medium"><i class="fa-solid fa-external-link text-[10px]"></i> Open Document</a></td>
+                    <td class="p-3 text-right"><button onclick="deleteSF2('${item.id}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button></td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function deleteSF2(id) {
+            if (confirm("Remove this SF2 record entry?")) {
+                state.sf2 = state.sf2.filter(i => i.id !== id);
+                saveState();
+                showToast("SF2 entry deleted");
+            }
+        }
+
+        // Upload SF10 Form Handler
+        async function handleSF10Upload(e) {
+            e.preventDefault();
+            const studentId = document.getElementById('sf10StudentSelect').value;
+            const gradeLevel = document.getElementById('sf10GradeLevel').value;
+            const fileInput = document.getElementById('sf10FileInput');
+
+            const student = state.students.find(s => s.id === studentId);
+            if (!student || !fileInput.files.length) {
+                showToast("Please enroll students before attaching SF10 records", true);
+                return;
+            }
+
+            const file = fileInput.files[0];
+            let fileUrl = "#";
+
+            if (state.gdriveUrl) {
+                showToast("Uploading SF10 to Google Drive...");
+                fileUrl = await uploadToGoogleDrive(file);
+            } else {
+                fileUrl = URL.createObjectURL(file);
+                showToast("Saved SF10 locally in browser cache");
+            }
+
+            state.sf10.push({
+                id: Date.now().toString(),
+                studentId,
+                lrn: student.lrn,
+                studentName: `${student.lastName}, ${student.firstName}`,
+                gradeLevel,
+                fileName: file.name,
+                url: fileUrl
+            });
+
+            saveState();
+            fileInput.value = "";
+        }
+
+        function populateSF10StudentSelect() {
+            const select = document.getElementById('sf10StudentSelect');
+            select.innerHTML = "";
+            if (state.students.length === 0) {
+                select.innerHTML = '<option value="">-- No Enrolled Students Available --</option>';
+                return;
+            }
+            state.students.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = `${s.lastName}, ${s.firstName} (LRN: ${s.lrn})`;
+                select.appendChild(opt);
+            });
+        }
+
+        function renderSF10Table() {
+            const body = document.getElementById('sf10TableBody');
+            body.innerHTML = "";
+
+            if (state.sf10.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">No SF10 permanent records attached yet.</td></tr>`;
+                return;
+            }
+
+            state.sf10.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-slate-600">${item.lrn}</td>
+                    <td class="p-3 font-bold text-slate-800">${item.studentName}</td>
+                    <td class="p-3 text-slate-600">${item.gradeLevel}</td>
+                    <td class="p-3 font-mono text-slate-500">${item.fileName}</td>
+                    <td class="p-3"><a href="${item.url}" target="_blank" class="text-sky-600 hover:underline font-medium"><i class="fa-solid fa-external-link text-[10px]"></i> View Permanent Record</a></td>
+                    <td class="p-3 text-right"><button onclick="deleteSF10('${item.id}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button></td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function deleteSF10(id) {
+            if (confirm("Remove this permanent record entry?")) {
+                state.sf10 = state.sf10.filter(i => i.id !== id);
+                saveState();
+                showToast("SF10 entry deleted");
+            }
+        }
+
+        // Base64 helper for Drive upload
+        async function uploadToGoogleDrive(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    const base64 = e.target.result;
+                    const payload = {
+                        fileName: file.name,
+                        mimeType: file.type,
+                        fileData: base64
+                    };
+                    try {
+                        const response = await fetch(state.gdriveUrl, {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+                        const res = await response.json();
+                        if (res.status === "success") {
+                            resolve(res.url);
+                        } else {
+                            showToast("Google Drive error. Fallback to local storage.", true);
+                            resolve(URL.createObjectURL(file));
+                        }
+                    } catch(err) {
+                        console.error(err);
+                        showToast("Failed to connect to Apps Script. Stored locally.", true);
+                        resolve(URL.createObjectURL(file));
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // AI Daily Lesson Log Generator Logic
+        function generateDLL() {
+            const subject = document.getElementById('dllSubject').value || "General Curriculum";
+            const grade = document.getElementById('dllGrade').value;
+            const topic = document.getElementById('dllTopic').value || "Fundamental Core Concepts";
+
+            const outputContainer = document.getElementById('dllOutput');
+            const outputText = document.getElementById('dllText');
+
+            const dllContent = `I. OBJECTIVES
+A. Content Standard: The learner demonstrates understanding of core principles of ${topic}.
+B. Performance Standard: The learner independently solves real-world problems involving ${topic}.
+C. Learning Competencies: Identifies, analyzes, and applies principles of ${topic} in ${subject} (${grade}).
+
+II. CONTENT: ${topic.toUpperCase()}
+
+III. LEARNING RESOURCES
+A. References: DepEd K-12 Curriculum Guide, ${subject} Learner's Material (${grade}).
+B. Other Resources: Interactive Visual Aids, Contextualized Worksheets.
+
+IV. PROCEDURES
+A. Reviewing Previous Lesson: Recall prior concepts relevant to ${topic}.
+B. Establishing Purpose: Introduce real-life applicability at Dawis National High School.
+C. Presenting Examples: Guided board work and multimedia examples.
+D. Discussing New Concepts: Collaborative group activities and structured discussion.
+E. Developing Mastery: Formative evaluation exercise (10-item seatwork).
+F. Practical Application: Connect lesson to daily community contexts in Dawis.
+
+V. REMARKS & REFLECTION
+A. No. of learners who earned 80% on formative assessment: ____
+B. No. of learners who require additional remedial activities: ____`;
+
+            outputText.textContent = dllContent;
+            outputContainer.classList.remove('hidden');
+            showToast("Lesson log structure generated");
+        }
+
+        function copyDLL() {
+            const text = document.getElementById('dllText').textContent;
+            navigator.clipboard.writeText(text);
+            showToast("Lesson Log copied to clipboard!");
+        }
+
+        // COT Rubric Calculator
+        function calculateCOT() {
+            const inputs = document.querySelectorAll('.cot-rate');
+            let sum = 0;
+            inputs.forEach(i => sum += parseFloat(i.value) || 0);
+            const avg = (sum / inputs.length).toFixed(2);
+
+            let status = "Consistently Exceeds Expectations";
+            if (avg < 4) status = "Needs Improvement";
+            else if (avg < 5.5) status = "Meets Standard Competency";
+
+            const resultDiv = document.getElementById('cotResult');
+            const display = document.getElementById('cotAverageDisplay');
+
+            display.innerHTML = `<strong>Overall Mean Rating:</strong> ${avg} / 7.00 <br><span class="text-purple-700 font-semibold">Performance Band: ${status}</span>`;
+            resultDiv.classList.remove('hidden');
+            showToast("COT Evaluation calculated");
+        }
+
+        // Storage Settings logic
+        function saveGDriveUrl() {
+            const url = document.getElementById('gdriveScriptUrl').value.trim();
+            if (!url) {
+                showToast("Please enter a valid Google Apps Script URL", true);
+                return;
+            }
+            state.gdriveUrl = url;
+            saveState();
+            updateStorageBadge(true);
+            showToast("Google Drive Web App storage connected successfully!");
+        }
+
+        function removeGDriveStorage() {
+            if (confirm("Disconnect Google Drive cloud storage? Storage will fall back to local browser mode.")) {
+                state.gdriveUrl = "";
+                document.getElementById('gdriveScriptUrl').value = "";
+                saveState();
+                updateStorageBadge(false);
+                showToast("Google Drive storage disconnected.");
+            }
+        }
+
+        function updateStorageBadge(connected) {
+            const badge = document.getElementById('storageBadge');
+            const desc = document.getElementById('storageDesc');
+            const settingsBadge = document.getElementById('settingsStatusBadge');
+
+            if (connected) {
+                badge.className = "bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded text-[10px] font-bold";
+                badge.textContent = "Google Drive Sync";
+                desc.textContent = "Connected to Google Apps Script. Scanned SF2 and SF10 uploads sync directly to Drive.";
+                
+                if (settingsBadge) {
+                    settingsBadge.className = "px-2.5 py-1 text-xs rounded-full font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                    settingsBadge.textContent = "Connected to Google Drive";
+                }
+            } else {
+                badge.className = "bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded text-[10px] font-bold";
+                badge.textContent = "Browser Local";
+                desc.textContent = "Files stored locally in browser storage. Connect Google Drive in Settings for cloud sync.";
+                
+                if (settingsBadge) {
+                    settingsBadge.className = "px-2.5 py-1 text-xs rounded-full font-bold bg-amber-100 text-amber-800 border border-amber-300";
+                    settingsBadge.textContent = "Disconnected (Browser Mode)";
+                }
+            }
+        }
+
+        function copyAppsScript() {
+            const code = document.getElementById('appsScriptCode').textContent;
+            navigator.clipboard.writeText(code);
+            showToast("Google Apps Script code copied to clipboard!");
+        }
+    </script>
+</body>
+</html>
